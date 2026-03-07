@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/news-summarizer/static/css/main.e6c13ad2.css",
+    "main.js": "/news-summarizer/static/js/main.01ece4fa.js",
+    "index.html": "/news-summarizer/index.html",
+    "main.e6c13ad2.css.map": "/news-summarizer/static/css/main.e6c13ad2.css.map",
+    "main.01ece4fa.js.map": "/news-summarizer/static/js/main.01ece4fa.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.01ece4fa.js"
+  ]
+}
