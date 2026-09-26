@@ -26,26 +26,23 @@ export async function processWithLLM({
   llmConfig,
 }: ProcessArticleParams): Promise<ProcessedArticle> {
   const startTime = Date.now();
+  let article: ProcessedArticle;
   
-  try {
-    if (llmConfig.provider === 'gemini') {
-      return await processWithGemini(title, content, processingOptions, llmConfig);
-    } else if (llmConfig.provider === 'ollama') {
-      return await processWithOllama(title, content, processingOptions, llmConfig);
-    } else {
-      throw new Error('Unsupported LLM provider');
-    }
-  } finally {
-    const processingTime = Date.now() - startTime;
-    console.log(`Processing completed in ${processingTime}ms`);
-    
-    return {
-      title,
-      content,
-      processingTime,
-      modelUsed: llmConfig.model,
-    };
+  if (llmConfig.provider === 'gemini') {
+    article = await processWithGemini(title, content, processingOptions, llmConfig);
+  } else if (llmConfig.provider === 'ollama') {
+    article = await processWithOllama(title, content, processingOptions, llmConfig);
+  } else {
+    throw new Error('Unsupported LLM provider');
   }
+
+  const processingTime = Date.now() - startTime;
+  console.log(`Processing completed in ${processingTime}ms`);
+  
+  return {
+    ...article,
+    processingTime,
+  };
 }
 
 async function processWithGemini(
@@ -160,8 +157,16 @@ function parseProcessedResponse(
   modelUsed: string
 ): ProcessedArticle {
   try {
+    // Clean up code block backticks if present in LLM response
+    let cleanedText = responseText.trim();
+    if (cleanedText.startsWith('```json')) {
+      cleanedText = cleanedText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (cleanedText.startsWith('```')) {
+      cleanedText = cleanedText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
     // Try to parse the response as JSON
-    const parsedResponse = JSON.parse(responseText);
+    const parsedResponse = JSON.parse(cleanedText);
     
     return {
       title: originalTitle,
@@ -178,7 +183,7 @@ function parseProcessedResponse(
     return {
       title: originalTitle,
       content: originalContent,
-      summary: 'Unable to parse the response. Raw output from the model:\n\n' + responseText,
+      summary: responseText,
       processedContent: originalContent,
       processingTime: 0,
       modelUsed,

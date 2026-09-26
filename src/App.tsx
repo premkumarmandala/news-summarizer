@@ -33,7 +33,7 @@ const theme = createTheme({
 const defaultLLMConfig: LLMConfig = {
   provider: 'gemini',
   apiKey: '',
-  model: 'gemini-pro',
+  model: 'gemini-1.5-flash',
   temperature: 0.7,
   maxTokens: 1000,
 };

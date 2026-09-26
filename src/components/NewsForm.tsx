@@ -216,7 +216,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ llmConfig, onConfigChange, onNewArt
                   label="Model"
                   value={llmConfig.model}
                   onChange={handleLLMConfigChange}
-                  helperText={llmConfig.provider === 'gemini' ? 'e.g., gemini-pro' : 'e.g., llama2'}
+                  helperText={llmConfig.provider === 'gemini' ? 'e.g., gemini-1.5-flash or gemini-2.0-flash' : 'e.g., llama2'}
                 />
               </Box>
               <Box sx={{ width: '100%', px: 1 }}>
